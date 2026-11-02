@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f9f6f0;
+  --bg-inverse: #1a1a1a;
+  --fg: #1a1a1a;
+  --fg-inverse: #f9f6f0;
+  --accent: #d8c4b6;
+  --accent-deep: #8c7a6b;
+  --surface: #ffffff;
+  --border: rgb(26 26 26 / 12%);
+  --border-strong: rgb(26 26 26 / 28%);
+  --header-height: 4.75rem;
+  --content-max: 76rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 180ms;
+  --duration-base: 420ms;
+  --duration-reveal: 1000ms;
+  --space-section: clamp(4.5rem, 8vw, 7.5rem);
+  --text-body: 1.0625rem;
+  --text-small: 0.9375rem;
+  --background: var(--bg);
+  --foreground: var(--fg);
+}
+
+@theme inline {
+  --color-ivory: #f9f6f0;
+  --color-ink: #1a1a1a;
+  --color-sand: #d8c4b6;
+  --color-taupe: #8c7a6b;
+  --color-paper: #ffffff;
+  --font-sans: var(--font-tajawal), "Segoe UI", Tahoma, sans-serif;
+  --font-display: var(--font-el-messiri), "Noto Naskh Arabic", serif;
+}
+
+html {
+  scroll-behavior: auto;
+  overflow-x: clip;
+  color-scheme: light;
+  background: var(--bg);
+}
+
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.9;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+}
+
+section[id] {
+  scroll-margin-top: calc(var(--header-height) + 0.75rem);
+}
+
+.section-space {
+  padding-block: var(--space-section);
+}
+
+.skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.skip-link:focus {
+  position: fixed;
+  top: 1rem;
+  inset-inline-start: 1rem;
+  z-index: 70;
+  width: auto;
+  height: auto;
+  clip: auto;
+  overflow: visible;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 0.7rem 1rem;
+}
+
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-pending {
+    opacity: 1;
+    transform: none;
+  }
+}
