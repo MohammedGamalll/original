@@ -7,21 +7,37 @@ import { navItems, siteConfig } from "@/data/site-config";
 export function Footer() {
   const year = new Date().getFullYear();
   const contacts = [
-    siteConfig.phone ? { href: `tel:${siteConfig.phone}`, label: siteConfig.phone } : null,
-    siteConfig.email ? { href: `mailto:${siteConfig.email}`, label: siteConfig.email } : null,
-    siteConfig.whatsappUrl ? { href: siteConfig.whatsappUrl, label: "واتساب" } : null,
+    siteConfig.phone
+      ? { href: `tel:${siteConfig.phone}`, label: siteConfig.phone }
+      : null,
+    siteConfig.email
+      ? { href: `mailto:${siteConfig.email}`, label: siteConfig.email }
+      : null,
+    siteConfig.whatsappUrl
+      ? { href: siteConfig.whatsappUrl, label: "واتساب" }
+      : null,
   ].filter((item) => item !== null);
 
   const socials = [
-    siteConfig.social.instagram ? { href: siteConfig.social.instagram, label: "إنستغرام" } : null,
-    siteConfig.social.facebook ? { href: siteConfig.social.facebook, label: "فيسبوك" } : null,
+    siteConfig.social.instagram
+      ? { href: siteConfig.social.instagram, label: "إنستغرام" }
+      : null,
+    siteConfig.social.facebook
+      ? { href: siteConfig.social.facebook, label: "فيسبوك" }
+      : null,
   ].filter((item) => item !== null);
 
   return (
     <footer className="bg-ink text-ivory">
       <Container className="grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <Image src="/brand/seal2.png" alt="" width={84} height={84} className="mb-6" />
+          <Image
+            src="/brand/seal2.png"
+            alt=""
+            width={84}
+            height={84}
+            className="mb-6"
+          />
           <p className="font-display text-3xl tracking-[0.14em]">ORIGINAL</p>
           <p className="mt-4 max-w-sm text-ivory/80">
             نصمم مساحات تجمع بين الراحة والجمال والاهتمام بكل تفصيلة.
@@ -32,7 +48,10 @@ export function Footer() {
           <ul className="grid gap-2">
             {navItems.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-ivory/85 transition-colors hover:text-sand">
+                <Link
+                  href={item.href}
+                  className="text-ivory/85 transition-colors hover:text-sand"
+                >
                   {item.label}
                 </Link>
               </li>
@@ -60,13 +79,20 @@ export function Footer() {
               </ul>
             </>
           ) : (
-            <p className="max-w-xs text-ivory/75">بيانات التواصل تُضاف من إعدادات الموقع عند توفرها.</p>
+            <p className="max-w-xs text-ivory/75">
+              بيانات التواصل تُضاف من إعدادات الموقع عند توفرها.
+            </p>
           )}
           {socials.length > 0 ? (
             <ul className="mt-6 flex flex-wrap gap-4">
               {socials.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href} target="_blank" rel="noopener noreferrer" className="hover:text-sand">
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-sand"
+                  >
                     {item.label}
                   </a>
                 </li>
@@ -78,6 +104,21 @@ export function Footer() {
       <Container className="flex flex-wrap items-center justify-between gap-4 border-t border-ivory/15 py-6 text-sm text-ivory/70">
         <p>© {year} ORIGINAL</p>
         <BackToTop />
+      </Container>
+      <Container>
+        <div className="site-wrap flex flex-wrap  items-center justify-center gap-3 py-6 text-sm text-on-surface-variant">
+          <span>
+            Powered by PIXEL01 --{" "}
+            <a
+              href="https://wa.me/201034029665"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline "
+            >
+              Contact us
+            </a>
+          </span>{" "}
+        </div>
       </Container>
     </footer>
   );

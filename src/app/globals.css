@@ -90,6 +90,16 @@ section[id] {
   padding: 0.7rem 1rem;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .card-zoom {
+    transition: transform 700ms var(--ease-out);
+  }
+
+  .group:hover .card-zoom {
+    transform: scale(1.03);
+  }
+}
+
 .reveal-pending {
   opacity: 0;
   transform: translateY(1rem);

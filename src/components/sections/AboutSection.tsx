@@ -1,6 +1,5 @@
-import Image from "next/image";
-import { ImageReveal } from "@/components/motion/ImageReveal";
 import { Reveal } from "@/components/motion/Reveal";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 
@@ -8,17 +7,17 @@ export function AboutSection() {
   return (
     <section id="about" className="section-space" aria-labelledby="about-title">
       <Container className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
-        <ImageReveal className="lg:col-span-7">
+        <Reveal className="lg:col-span-7">
           <div className="relative aspect-[4/5] bg-sand/40 sm:aspect-[5/4]">
-            <Image
+            <ResponsiveImage
               src="/images/about/main.webp"
               alt="فراغ معيشي واسع بإضاءة طبيعية وتفاصيل حجر وخشب"
-              fill
+              width={1400}
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover object-center"
+              className="object-center"
             />
           </div>
-        </ImageReveal>
+        </Reveal>
         <div className="lg:col-span-5">
           <Reveal>
             <p className="text-sm font-medium text-ink/80">عن ORIGINAL</p>

@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/types/project";
-import { ImageReveal } from "@/components/motion/ImageReveal";
+import { Reveal } from "@/components/motion/Reveal";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { cn } from "@/lib/utils";
 import { saveReturnPosition } from "@/lib/scroll-return";
 
@@ -31,21 +31,21 @@ export function ProjectCard({
         onClick={() => saveReturnPosition()}
         className="group block"
       >
-        <ImageReveal>
+        <Reveal>
           <div className={cn("relative overflow-hidden bg-sand/40", aspects[variant])}>
-            <Image
+            <ResponsiveImage
               src={project.cover.src}
               alt={project.cover.alt}
-              fill
+              width={project.cover.width}
               sizes={
                 variant === "featured"
                   ? "(min-width: 1024px) 76rem, 100vw"
                   : "(min-width: 1024px) 40rem, 100vw"
               }
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+              className="card-zoom object-center"
             />
           </div>
-        </ImageReveal>
+        </Reveal>
         <div className="flex items-end justify-between gap-4 px-1 py-4 sm:px-0">
           <div>
             <p className="flex flex-wrap items-center gap-3 text-sm text-ink/80">

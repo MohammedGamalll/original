@@ -137,6 +137,29 @@ async function writeOutput(buffer, output) {
   console.log(output.file);
 }
 
+function smallPath(file) {
+  if (!file.endsWith(".webp") || file.includes("-thumb") || file.includes("-sm.webp")) return "";
+  return file.replace(/\.webp$/, "-sm.webp");
+}
+
+async function writeSmall(source, output) {
+  const relative = smallPath(output.file);
+  if (!relative || output.width <= 800) return;
+  const destination = path.join(root, relative);
+  if (await fileReady(destination)) {
+    console.log(`skip ${relative}`);
+    return;
+  }
+  await mkdir(path.dirname(destination), { recursive: true });
+  const height = Math.max(1, Math.round((800 * output.height) / output.width));
+  await sharp(source)
+    .rotate()
+    .resize(800, height, { fit: "cover", position: "centre" })
+    .webp({ quality: 64 })
+    .toFile(destination);
+  console.log(relative);
+}
+
 async function mapPool(items, limit, worker) {
   const queue = [...items];
   await Promise.all(
@@ -175,9 +198,16 @@ await sharp(logoSource)
   .toFile(path.join(root, "src/app/icon.png"));
 
 await mapPool(groups, 4, async (group) => {
-  const buffer = await download(group.photo);
+  const missingLarge = [];
   for (const output of group.outputs) {
-    await writeOutput(buffer, output);
+    const destination = path.join(root, output.file);
+    if (!(await fileReady(destination))) missingLarge.push(output);
+  }
+  const buffer = missingLarge.length > 0 ? await download(group.photo) : null;
+  for (const output of group.outputs) {
+    if (buffer && missingLarge.includes(output)) await writeOutput(buffer, output);
+    const large = path.join(root, output.file);
+    if (await fileReady(large)) await writeSmall(large, output);
   }
 });
 

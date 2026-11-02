@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { HeroSequence } from "@/components/motion/HeroSequence";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { siteConfig } from "@/data/site-config";
 
 export function HeroSection() {
@@ -10,14 +10,13 @@ export function HeroSection() {
       <HeroSequence>
         <div className="relative min-h-dvh w-full">
           <div data-hero-image className="absolute inset-0">
-            <Image
+            <ResponsiveImage
               src="/images/hero/hero.webp"
               alt="غرفة معيشة معاصرة بألوان دافئة وإضاءة طبيعية"
-              fill
+              width={1920}
               priority
-              fetchPriority="high"
-              sizes="100vw"
-              className="object-cover object-[center_40%]"
+              sizes="(max-width: 900px) 100vw, 1920px"
+              className="object-[center_40%]"
             />
           </div>
           <div className="absolute inset-0 bg-black/45" aria-hidden />

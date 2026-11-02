@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { ProjectImage } from "@/types/project";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { cn, formatArabicNumber } from "@/lib/utils";
 
 const SWIPE_DISTANCE = 56;
@@ -182,16 +183,13 @@ export function ProjectCarousel({ images }: { images: ProjectImage[] }) {
               style={{ width: `${100 / total}%` }}
               aria-hidden={imageIndex !== index}
             >
-              <Image
+              <ResponsiveImage
                 src={image.src}
                 alt={imageIndex === index ? image.alt : ""}
-                fill
-                draggable={false}
+                width={image.width}
                 sizes="(min-width: 1024px) 76rem, 100vw"
-                {...(imageIndex === 0
-                  ? { priority: true as const }
-                  : { loading: "eager" as const })}
-                className="pointer-events-none object-cover"
+                priority={imageIndex === 0}
+                className="pointer-events-none"
               />
             </div>
           ))}
