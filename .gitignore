@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Media (Images and Videos)
+/public/images/
+/public/videos/
+/public/media/

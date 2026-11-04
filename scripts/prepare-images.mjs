@@ -59,7 +59,25 @@ const groups = [
     "photo-1600047509358-9dc75507daeb",
     "photo-1512917774080-9991f1c4c750",
   ]),
+  service("interior", "photo-1618221195710-dd6b41faaea6"),
+  service("three-d", "photo-1503387762-592deb58ef4e"),
+  service("finishing", "photo-1600585154526-990dced4db0d"),
+  service("residential", "photo-1600210492486-724fe5c67fb0"),
+  service("commercial", "photo-1497366216548-37526070297c"),
+  service("materials", "photo-1615873968403-89e068629265"),
+  service("smart-home", "photo-1558002038-1055907df827"),
+  service("carpentry", "photo-1503602642458-232111445657"),
+  service("preview", "photo-1600607687920-4e2a09cf159d"),
+  service("facades", "photo-1487958449943-2429e8be8625"),
+  service("fields", "photo-1574629810360-7efbbe195018"),
 ].flat();
+
+function service(name, photo) {
+  return {
+    photo,
+    outputs: [{ file: `public/images/services/${name}.webp`, width: 1400, height: 960 }],
+  };
+}
 
 function project(slug, photos) {
   return photos.map((photo, index) => {

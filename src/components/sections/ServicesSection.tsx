@@ -1,6 +1,8 @@
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
 import { Container } from "@/components/ui/Container";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { services } from "@/data/services";
 
@@ -15,29 +17,41 @@ export function ServicesSection() {
             title="حلول متكاملة لمساحتك"
             text="من التصور الأول إلى تفاصيل التنفيذ، نمنح كل مساحة اهتمامًا يتناسب مع رؤيتها واحتياجاتها."
           />
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-ink/80">
-            الخدمات المعروضة أمثلة قابلة للتعديل، وتُراجع حسب ما تقدمه الشركة فعلًا.
-          </p>
         </Reveal>
-        <ul className="mt-12 grid gap-px bg-ink/10 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-16 lg:mt-24">
           {services.map((service, index) => (
-            <li key={service.number} className="bg-ivory">
-              <Reveal delay={index * 90} className="h-full">
-                <article className="group flex h-full flex-col justify-between p-7 transition-colors duration-300 hover:bg-paper sm:p-8">
-                  <div>
-                    <p className="font-display text-xl text-ink/80">{service.number}</p>
-                    <h3 className="mt-6 font-display text-2xl font-semibold">{service.title}</h3>
-                    <p className="mt-3 text-base leading-8 text-ink/80">{service.description}</p>
-                  </div>
-                  <ArrowLeft
-                    aria-hidden
-                    className="mt-8 size-5 text-taupe transition-transform duration-300 group-hover:-translate-x-1"
+            <Reveal key={service.number}>
+              <article
+                className={`mb-16 flex flex-col items-center gap-8 last:mb-0 md:flex-row lg:mb-24 lg:gap-16 ${
+                  index % 2 !== 0 ? "md:flex-row-reverse" : ""
+                }`}
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden md:w-1/2">
+                  <ResponsiveImage
+                    src={service.image}
+                    alt={service.imageAlt}
+                    width={1400}
+                    sizes="(min-width: 768px) 50vw, 100vw"
                   />
-                </article>
-              </Reveal>
-            </li>
+                </div>
+                <div className="flex w-full flex-col justify-center py-2 text-start md:w-1/2 md:px-6 md:py-8 lg:px-10">
+                  <p className="font-display text-xl text-ink/80">{service.number}</p>
+                  <h3 className="mt-5 font-display text-[clamp(1.75rem,3vw,2.75rem)] font-semibold leading-snug">
+                    {service.title}
+                  </h3>
+                  <p className="mt-5 text-lg leading-9 text-ink/80">{service.description}</p>
+                  <Link
+                    href="/#contact"
+                    className="mt-8 inline-flex items-center gap-2 self-start text-sm font-medium text-taupe transition-colors duration-300 hover:text-ink"
+                  >
+                    اقرأ المزيد
+                    <ArrowLeft aria-hidden className="size-4" />
+                  </Link>
+                </div>
+              </article>
+            </Reveal>
           ))}
-        </ul>
+        </div>
       </Container>
     </section>
   );

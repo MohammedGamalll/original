@@ -18,7 +18,6 @@ export type SiteConfig = {
     instagram: string;
     facebook: string;
   };
-  placeholderNotice: string;
 };
 
 const address = "١ شارع مصطفي النحاس تقاطع شارع عباس العقاد مدينة نصر";
@@ -46,8 +45,6 @@ export const siteConfig: SiteConfig = {
     instagram: "",
     facebook: "",
   },
-  placeholderNotice:
-    "الصور والنصوص في هذا المعرض نماذج بصرية، وليست أعمالًا موثّقة للشركة.",
 };
 
 export const navItems = [

@@ -1,10 +1,24 @@
 export type ProjectImage = {
+  kind?: "image";
   src: string;
   thumb: string;
   alt: string;
   width: number;
   height: number;
 };
+
+export type ProjectVideo = {
+  kind: "video";
+  /** MP4 file, H.264 video and AAC audio, so it plays on iPhone and Android. */
+  src: string;
+  poster: string;
+  thumb: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
+export type ProjectSlide = ProjectImage | ProjectVideo;
 
 export type Project = {
   slug: string;
@@ -16,7 +30,5 @@ export type Project = {
   materials: string;
   scope: string;
   cover: ProjectImage;
-  gallery: ProjectImage[];
-  /** Sample photography and copy, not a documented company project. */
-  isPlaceholder: true;
+  gallery: ProjectSlide[];
 };

@@ -1,7 +1,7 @@
 import { ParallaxFrame } from "@/components/motion/ParallaxFrame";
 import { Reveal } from "@/components/motion/Reveal";
 import { Container } from "@/components/ui/Container";
-import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 export function PhilosophySection() {
   return (
@@ -21,10 +21,11 @@ export function PhilosophySection() {
         </Reveal>
         <ParallaxFrame className="lg:col-span-6">
           <div className="relative aspect-[4/5] bg-sand/20">
-            <ResponsiveImage
-              src="/images/philosophy/space.webp"
-              alt="فراغ معماري داخلي بخطوط واضحة وضوء علوي"
-              width={1400}
+            <LazyVideo
+              src="/videos/vision/vision.mp4"
+              poster="/videos/vision/poster.webp"
+              alt="ستائر طويلة وطاولة بجانب السرير بفازة وقمح مجفف"
+              width={478}
               sizes="(min-width: 1024px) 40vw, 100vw"
             />
           </div>

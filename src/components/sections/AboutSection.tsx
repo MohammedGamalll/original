@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/motion/Reveal";
-import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { LazyVideo } from "@/components/ui/LazyVideo";
 
 export function AboutSection() {
   return (
@@ -9,12 +9,12 @@ export function AboutSection() {
       <Container className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
         <Reveal className="lg:col-span-7">
           <div className="relative aspect-[4/5] bg-sand/40 sm:aspect-[5/4]">
-            <ResponsiveImage
-              src="/images/about/main.webp"
-              alt="فراغ معيشي واسع بإضاءة طبيعية وتفاصيل حجر وخشب"
+            <LazyVideo
+              src="/videos/about/about.mp4"
+              poster="/videos/about/poster.webp"
+              alt="لقطة من أعمال ORIGINAL"
               width={1400}
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-center"
             />
           </div>
         </Reveal>
