@@ -1,8 +1,13 @@
 "use client";
 
-import { Play } from "lucide-react";
+import { Maximize, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
+import {
+  enterVideoFullscreen,
+  setVideoAudible,
+  watchVideoFullscreen,
+} from "@/lib/video-fullscreen";
 import { cn } from "@/lib/utils";
 
 function releaseVideo(video: HTMLVideoElement | null) {
@@ -33,10 +38,21 @@ export function LazyVideo({
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [started, setStarted] = useState(false);
+  const [audible, setAudible] = useState(false);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    return watchVideoFullscreen(video, (fullscreen) => {
+      setVideoAudible(video, fullscreen);
+      setAudible(fullscreen);
+    });
+  }, []);
 
   useEffect(() => {
     if (active) return;
     setStarted(false);
+    setAudible(false);
     releaseVideo(ref.current);
   }, [active]);
 
@@ -45,7 +61,18 @@ export function LazyVideo({
     const video = ref.current;
     if (!video) return;
     if (!video.getAttribute("src")) video.src = src;
+    setVideoAudible(video, false);
     setStarted(true);
+    void video.play();
+  }
+
+  function expand(event: React.MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+    const video = ref.current;
+    if (!video) return;
+    if (!video.getAttribute("src")) video.src = src;
+    setStarted(true);
+    enterVideoFullscreen(video, setAudible);
     void video.play();
   }
 
@@ -61,6 +88,7 @@ export function LazyVideo({
       />
       <video
         ref={ref}
+        muted={!audible}
         controls={started}
         playsInline
         preload="none"
@@ -82,6 +110,17 @@ export function LazyVideo({
           <Play aria-hidden className="size-6 translate-x-0.5" />
         </button>
       )}
+      {started ? (
+        <button
+          type="button"
+          aria-label="عرض الفيديو بملء الشاشة"
+          className="absolute bottom-16 z-20 flex size-10 items-center justify-center rounded-full bg-black/60 text-ivory start-3 backdrop-blur-md"
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={expand}
+        >
+          <Maximize aria-hidden className="size-5" />
+        </button>
+      ) : null}
     </>
   );
 }

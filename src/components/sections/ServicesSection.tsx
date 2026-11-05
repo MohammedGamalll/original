@@ -8,8 +8,22 @@ import { services } from "@/data/services";
 
 export function ServicesSection() {
   return (
-    <section id="services" className="section-space border-t border-ink/10" aria-labelledby="services-title">
+    <section
+      id="services"
+      className="section-space !pt-0 border-t border-ink/10"
+      aria-labelledby="services-title"
+    >
       <Container>
+        <div className="mb-8 md:mb-14">
+          <div className="relative aspect-[1024/374] overflow-hidden rounded-2xl border border-black/5 shadow-sm">
+            <ResponsiveImage
+              src="/images/original-banner.webp"
+              alt="أوريجينال للتصميم والتنفيذ والتشطيب - Complete Interior Solutions"
+              width={1024}
+              sizes="(min-width: 76rem) 1152px, 100vw"
+            />
+          </div>
+        </div>
         <Reveal>
           <SectionHeading
             id="services-title"
@@ -35,11 +49,15 @@ export function ServicesSection() {
                   />
                 </div>
                 <div className="flex w-full flex-col justify-center py-2 text-start md:w-1/2 md:px-6 md:py-8 lg:px-10">
-                  <p className="font-display text-xl text-ink/80">{service.number}</p>
+                  <p className="font-display text-xl text-ink/80">
+                    {service.number}
+                  </p>
                   <h3 className="mt-5 font-display text-[clamp(1.75rem,3vw,2.75rem)] font-semibold leading-snug">
                     {service.title}
                   </h3>
-                  <p className="mt-5 text-lg leading-9 text-ink/80">{service.description}</p>
+                  <p className="mt-5 text-lg leading-9 text-ink/80">
+                    {service.description}
+                  </p>
                   <Link
                     href="/#contact"
                     className="mt-8 inline-flex items-center gap-2 self-start text-sm font-medium text-taupe transition-colors duration-300 hover:text-ink"

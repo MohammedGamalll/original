@@ -1,20 +1,20 @@
 "use client";
 
-import { Maximize } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { projects } from "@/data/projects";
 import { siteConfig } from "@/data/site-config";
+import {
+  enterVideoFullscreen,
+  setVideoAudible,
+  watchVideoFullscreen,
+} from "@/lib/video-fullscreen";
 import { cn, formatArabicNumber } from "@/lib/utils";
-import type { Project, ProjectVideo } from "@/types/project";
+import type { Project, ProjectSlide } from "@/types/project";
 
 const BATCH = 4;
-
-function videoSource(project: Project) {
-  return project.gallery.find(
-    (slide): slide is ProjectVideo => slide.kind === "video",
-  )?.src;
-}
+const MIN_SWIPE_DISTANCE = 50; // الحد الأدنى لمسافة السحب باللمس للتنقل
 
 function projectChatUrl(title: string) {
   const text = `السلام عليكم، حابب أسأل عن عمل: ${title}`;
@@ -23,23 +23,25 @@ function projectChatUrl(title: string) {
 
 function ActiveVideo({ src }: { src: string }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [audible, setAudible] = useState(false);
 
   useEffect(() => {
     const video = ref.current;
     if (!video) return;
     video.src = src;
+    setVideoAudible(video, false);
     void video.play().catch(() => {});
 
-    const fit = () => {
-      const full = document.fullscreenElement === video;
-      video.classList.toggle("object-cover", !full);
-      video.classList.toggle("object-contain", full);
-      video.classList.toggle("bg-black", full);
-    };
-    document.addEventListener("fullscreenchange", fit);
+    const stopWatch = watchVideoFullscreen(video, (fullscreen) => {
+      video.classList.toggle("object-cover", !fullscreen);
+      video.classList.toggle("object-contain", fullscreen);
+      video.classList.toggle("bg-black", fullscreen);
+      setVideoAudible(video, fullscreen);
+      setAudible(fullscreen);
+    });
 
     return () => {
-      document.removeEventListener("fullscreenchange", fit);
+      stopWatch();
       video.pause();
       video.removeAttribute("src");
       video.load();
@@ -50,21 +52,14 @@ function ActiveVideo({ src }: { src: string }) {
     event.stopPropagation();
     const video = ref.current;
     if (!video) return;
-    const webkit = video as HTMLVideoElement & {
-      webkitEnterFullscreen?: () => void;
-    };
-    if (webkit.webkitEnterFullscreen) {
-      webkit.webkitEnterFullscreen();
-      return;
-    }
-    void video.requestFullscreen().catch(() => {});
+    enterVideoFullscreen(video, setAudible);
   }
 
   return (
     <>
       <video
         ref={ref}
-        muted
+        muted={!audible}
         loop
         playsInline
         preload="none"
@@ -93,31 +88,156 @@ function AccordionPanel({
   active: boolean;
   onOpen: () => void;
 }) {
-  const src = videoSource(project);
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  // مراجع لحساب حركة السحب باللمس
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  // تجميع كافة عناصر المعرض (صور أو فيديوهات)، وإن لم توجد نستخدم صورة الغلاف
+  const slides: ProjectSlide[] =
+    project.gallery && project.gallery.length > 0
+      ? project.gallery
+      : [
+          {
+            kind: "image",
+            src: project.cover.src,
+            thumb: project.cover.thumb,
+            alt: project.cover.alt,
+            width: project.cover.width,
+            height: project.cover.height,
+          },
+        ];
+
+  // إعادة ضبط السلايدر للشريحة الأولى عند إغلاق الكارت
+  useEffect(() => {
+    if (!active) {
+      setSlideIndex(0);
+    }
+  }, [active]);
+
+  const currentSlide = slides[slideIndex] || slides[0];
+
+  function nextSlide(e?: React.MouseEvent) {
+    if (e) e.stopPropagation();
+    setSlideIndex((prev) => (prev + 1) % slides.length);
+  }
+
+  function prevSlide(e?: React.MouseEvent) {
+    if (e) e.stopPropagation();
+    setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  }
+
+  // أحداث السحب باللمس (Touch Gestures)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchEndX.current = null;
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+
+    if (distance > MIN_SWIPE_DISTANCE) {
+      // سحب لليسار -> الشريحة التالية
+      nextSlide();
+    } else if (distance < -MIN_SWIPE_DISTANCE) {
+      // سحب لليمين -> الشريحة السابقة
+      prevSlide();
+    }
+  };
 
   return (
     <article
       className={cn(
-        "relative min-w-0 cursor-pointer overflow-hidden rounded-2xl transition-all duration-500 ease-out",
+        "relative min-w-0 cursor-pointer overflow-hidden rounded-2xl transition-all duration-500 ease-out select-none",
         active
-          ? "h-[380px] flex-[4] md:h-auto md:brightness-100"
+          ? "h-[420px] flex-[4] md:h-auto md:brightness-100"
           : "h-14 flex-[1] brightness-90 hover:brightness-100 md:h-auto",
       )}
       onClick={onOpen}
+      onTouchStart={active && slides.length > 1 ? handleTouchStart : undefined}
+      onTouchMove={active && slides.length > 1 ? handleTouchMove : undefined}
+      onTouchEnd={active && slides.length > 1 ? handleTouchEnd : undefined}
     >
-      <ResponsiveImage
-        src={project.cover.src}
-        alt={active ? "" : project.cover.alt}
-        width={project.cover.width}
-        sizes="(min-width: 768px) 70vw, 100vw"
-        className="pointer-events-none object-cover"
-      />
-      {active && src ? <ActiveVideo src={src} /> : null}
+      {/* 1. عرض الشريحة الحالية (فيديو أو صورة) */}
+      {active ? (
+        currentSlide.kind === "video" ? (
+          <ActiveVideo key={currentSlide.src} src={currentSlide.src} />
+        ) : (
+          <ResponsiveImage
+            key={currentSlide.src}
+            src={currentSlide.src}
+            alt={project.title}
+            width={currentSlide.width}
+            sizes="(min-width: 768px) 70vw, 100vw"
+            className="pointer-events-none object-cover transition-opacity duration-300"
+          />
+        )
+      ) : (
+        <ResponsiveImage
+          src={project.cover.src}
+          alt={project.cover.alt}
+          width={project.cover.width}
+          sizes="(min-width: 768px) 70vw, 100vw"
+          className="pointer-events-none object-cover"
+        />
+      )}
 
+      {/* 2. تعتيم الكارت المغلق */}
       {!active && (
         <div className="pointer-events-none absolute inset-0 z-10 bg-black/40 transition-opacity" />
       )}
 
+      {/* 3. عناصر التحكم بالمعرض (تظهر فقط عند فتح الكارت وأكثريّة العناصر > 1) */}
+      {active && slides.length > 1 && (
+        <>
+          {/* مؤشر النقاط السفلي (Dots) */}
+          <div className="absolute bottom-3 start-1/2 translate-x-1/2 z-30 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-md">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                aria-label={`الانتقال للشريحة ${i + 1}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSlideIndex(i);
+                }}
+                className={cn(
+                  "h-1.5 rounded-full transition-all",
+                  slideIndex === i ? "w-4 bg-[#D8C4B6]" : "w-1.5 bg-white/50",
+                )}
+              />
+            ))}
+          </div>
+
+          {/* سهم التنقل السابق (اليمين في الواجهة العربية) */}
+          <button
+            type="button"
+            aria-label="الشريحة السابقة"
+            onClick={prevSlide}
+            className="absolute start-3 top-1/2 z-30 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-ivory backdrop-blur-md transition-all active:scale-95 hover:bg-black/80"
+          >
+            <ChevronRight className="size-5" />
+          </button>
+
+          {/* سهم التنقل التالي (اليسار في الواجهة العربية) */}
+          <button
+            type="button"
+            aria-label="الشريحة التالية"
+            onClick={nextSlide}
+            className="absolute end-3 top-1/2 z-30 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-ivory backdrop-blur-md transition-all active:scale-95 hover:bg-black/80"
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+        </>
+      )}
+
+      {/* 4. تفاصيل الكارت المغلق */}
       <div
         className={cn(
           "pointer-events-none absolute inset-0 z-20 flex items-center justify-between px-4 text-ivory transition-opacity duration-300 md:flex-col md:items-center md:justify-between md:py-5",
@@ -132,6 +252,7 @@ function AccordionPanel({
         </span>
       </div>
 
+      {/* 5. تفاصيل الكارت المفتوح */}
       <div
         aria-hidden={active ? undefined : true}
         inert={active ? undefined : true}
@@ -143,7 +264,7 @@ function AccordionPanel({
         <h3 className="font-display text-lg font-semibold text-white drop-shadow-sm md:text-2xl">
           {project.title}
         </h3>
-        <p className="mt-1 line-clamp-2 max-w-xl text-xs leading-5 text-ivory/85 drop-shadow-sm md:text-sm md:leading-6">
+        <p className="mt-1 mb-4 line-clamp-2 max-w-xl text-xs leading-5 text-ivory/85 drop-shadow-sm md:text-sm md:leading-6">
           {project.summary}
         </p>
       </div>
@@ -182,7 +303,7 @@ export function ProjectAccordion() {
         <div className="mt-4 flex items-center justify-between gap-3">
           <button
             type="button"
-            className="bg-[#D8C4B6] px-4 py-2 text-sm text-ink"
+            className="bg-[#D8C4B6] px-4 py-2 text-sm text-ink transition-colors hover:bg-[#cbb5a5]"
             onClick={() => go(batch - 1)}
           >
             السابق
@@ -192,7 +313,7 @@ export function ProjectAccordion() {
           </p>
           <button
             type="button"
-            className="bg-[#D8C4B6] px-4 py-2 text-sm text-ink"
+            className="bg-[#D8C4B6] px-4 py-2 text-sm text-ink transition-colors hover:bg-[#cbb5a5]"
             onClick={() => go(batch + 1)}
           >
             التالي

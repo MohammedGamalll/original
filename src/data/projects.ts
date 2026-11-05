@@ -215,6 +215,67 @@ export const projects: Project[] = [
       850,
     ),
   },
+  {
+    slug: "tv-wall-unit",
+    title: "تصميم وتنفيذ جدار التلفزيون",
+    category: "تشطيبات داخلية",
+    summary:
+      "جدار تلفزيون بتصميم مودرن يجمع بين التكسيات الخشبية وبديل الرخام مع إضاءة مخفية.",
+    description:
+      "تصميم وتنفيذ جدار مخصص لشاشة التلفزيون ضمن غرفة المعيشة، مع استخدام تكسيات خشبية وبديل الرخام لإضافة تنوع في الخامات والألوان. تم دمج إضاءة LED مخفية داخل التصميم لإبراز تفاصيل الجدار، مع تنفيذ وحدة سفلية لتوفير مساحة عملية للتخزين وتنظيم الأجهزة.",
+    materials:
+      "بديل الخشب، بديل الرخام، إضاءة LED مخفية، شرائح معدنية، ووحدة تخزين سفلية.",
+    scope: "تصميم وتنفيذ جدار التلفزيون والوحدة السفلية",
+    cover: {
+      src: "/images/projects/tv-wall-unit/01.webp",
+      thumb: "/images/projects/tv-wall-unit/01-thumb.webp",
+      alt: "جدار تلفزيون بتكسيات خشبية وبديل الرخام داخل غرفة المعيشة",
+      width: 736,
+      height: 886,
+    },
+    gallery: [
+      {
+        kind: "image",
+        src: "/images/projects/tv-wall-unit/01.webp",
+        thumb: "/images/projects/tv-wall-unit/01-thumb.webp",
+        alt: "جدار تلفزيون بتكسيات خشبية وبديل الرخام داخل غرفة المعيشة",
+        width: 736,
+        height: 886,
+      },
+      {
+        kind: "image",
+        src: "/images/projects/tv-wall-unit/02.webp",
+        thumb: "/images/projects/tv-wall-unit/02-thumb.webp",
+        alt: "جدار تلفزيون بتصميم رأسي ووحدة تخزين سفلية",
+        width: 736,
+        height: 914,
+      },
+      {
+        kind: "image",
+        src: "/images/projects/tv-wall-unit/03.webp",
+        thumb: "/images/projects/tv-wall-unit/03-thumb.webp",
+        alt: "شاشة تلفزيون مثبتة على خلفية من بديل الرخام مع إضاءة مخفية",
+        width: 736,
+        height: 896,
+      },
+      {
+        kind: "image",
+        src: "/images/projects/tv-wall-unit/04.webp",
+        thumb: "/images/projects/tv-wall-unit/04-thumb.webp",
+        alt: "جدار التلفزيون ضمن غرفة المعيشة مع إضاءة مخفية وتفاصيل رخامية",
+        width: 736,
+        height: 880,
+      },
+      {
+        kind: "image",
+        src: "/images/projects/tv-wall-unit/05.webp",
+        thumb: "/images/projects/tv-wall-unit/05-thumb.webp",
+        alt: "جدار تلفزيون بتفاصيل رخامية وإضاءة مخفية ضمن مساحة المعيشة",
+        width: 735,
+        height: 575,
+      },
+    ],
+  },
 ];
 
 export { fallbackImage };

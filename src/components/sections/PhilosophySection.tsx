@@ -5,7 +5,11 @@ import { LazyVideo } from "@/components/ui/LazyVideo";
 
 export function PhilosophySection() {
   return (
-    <section id="philosophy" className="bg-ink text-ivory" aria-labelledby="philosophy-title">
+    <section
+      id="philosophy"
+      className="bg-ink text-ivory"
+      aria-labelledby="philosophy-title"
+    >
       <Container className="section-space grid items-center gap-12 lg:grid-cols-12">
         <Reveal className="lg:col-span-6">
           <p className="text-sm text-sand">الرؤية</p>
@@ -16,11 +20,12 @@ export function PhilosophySection() {
             المساحة ليست مجرد مكان، بل إحساس تعيشه كل يوم.
           </h2>
           <p className="mt-6 max-w-md text-lg leading-9 text-ivory/80">
-            نهتم بعلاقة الضوء والخامة والحركة داخل المكان، حتى يبقى التصميم هادئًا وقابلًا للعيش.
+            نهتم بعلاقة الضوء والخامة والحركة داخل المكان، حتى يبقى التصميم
+            هادئًا وقابلًا للعيش.
           </p>
         </Reveal>
         <ParallaxFrame className="lg:col-span-6">
-          <div className="relative aspect-[4/5] bg-sand/20">
+          <div className="relative aspect-[5/5] bg-sand/20">
             <LazyVideo
               src="/videos/vision/vision.mp4"
               poster="/videos/vision/poster.webp"

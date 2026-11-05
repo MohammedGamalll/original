@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
+import { ResponsiveImage } from "@/components/ui/ResponsiveImage";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { siteConfig } from "@/data/site-config";
 
@@ -10,7 +11,25 @@ export function ContactSection() {
       className="section-space"
       aria-labelledby="contact-title"
     >
-      <Container className="grid gap-12 lg:grid-cols-12">
+      <Container>
+        <div className="mb-8 flex flex-col items-center text-center md:mb-10">
+          <div className="relative size-28 overflow-hidden rounded-full border-4 border-[#D8C4B6] shadow-md sm:size-36 md:size-40">
+            <ResponsiveImage
+              src="/images/ahmed-ramzy.webp"
+              alt="اللواء أحمد رمزي - رئيس مجلس الإدارة"
+              width={1024}
+              sizes="(min-width: 768px) 160px, 112px"
+              className="object-top"
+            />
+          </div>
+          <h3 className="mt-4 font-display text-lg font-bold text-ink sm:text-xl md:text-2xl">
+            اللواء أحمد رمزي
+          </h3>
+          <p className="mt-1 text-xs font-medium text-ink/75 sm:text-sm">
+            رئيس مجلس الإدارة
+          </p>
+        </div>
+        <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <SectionHeading
             id="contact-title"
@@ -67,6 +86,7 @@ export function ContactSection() {
             </dd>
           </div>
         </dl>
+        </div>
       </Container>
     </section>
   );
